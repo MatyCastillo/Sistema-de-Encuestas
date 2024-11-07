@@ -1,36 +1,145 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Portal de Empleados - Sistema de Encuestas de Salud</title>
-  <link
-    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-    rel="stylesheet"
-  />
-</head>
-<body>
-  <div class="container mt-5">
-    <!-- Header -->
-    <div class="jumbotron text-center">
-      <h1 id="bienvenida">Bienvenido</h1>
-      <p>Accede a las funciones según tu rol en el sistema de encuestas.</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portal de Empleados - Sistema de Encuestas de Salud</title>
+    <link
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Leaflet's JS -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+    <!-- Leaflet's CSS -->
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <!-- Header -->
+      <div class="jumbotron text-center">
+        <h1 id="bienvenida">Bienvenido</h1>
+        <p>Accede a las funciones según tu rol en el sistema de encuestas.</p>
+      </div>
+
+      <!-- Seccion Coordinador -->
+      <div id="pagina-coordinador" style="display: none">
+        <h2>Portal de Coordinador</h2>
+        <p>
+          Consulta los centros de tu zona y gestiona recordatorios de encuestas.
+        </p>
+        <div class="row">
+          <div class="col">
+            <!-- Información del Centro de Atención -->
+            <div class="card mb-4">
+              <div class="card-header">Zona Asiganda</div>
+              <div class="card-body">
+                
+                <p id="fechaAtencion">
+                  Nombre zona: <span>ZONA-A</span>
+                </p>
+              </div>
+            </div>
+            <!-- Centros -->
+            <div class="card mb-4">
+              <div class="card-header">Centros</div>
+              <div class="card-body">
+                <p id="estadoEncuesta">
+                  Nombre: <strong id="centro-1">Centro de salud UNGS</strong>
+                </p>
+                <p id="estadoEncuesta">
+                  Nombre: <strong id="centro-2">Centro salud San Miguel</strong>
+                </p>
+                <p id="estadoEncuesta">
+                  Nombre: <strong id="centro-3">Centro salud Malvinas Argentinas</strong>
+                </p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div id="map-personal" style="width: 600px; height: 400px"></div>
+          </div>
+        </div>
+      </div>
+      <!-- Seccion Personal de Secretaria -->
+
+        <div id="pagina-personal-secretaria" style="display: none">
+          <h2>Portal de Personal de Secretaría</h2>
+          <p>
+            Gestiona reportes de encuestas y solicita actualizaciones al sistema
+            de salud.
+          </p>
+          <div class="row">
+            <div class="col">
+              <!-- Información del Centro de Atención -->
+              <div class="card mb-4">
+                <div class="card-header">Zona Asiganda</div>
+                <div class="card-body">
+                  <button class="btn btn-danger" id="zona-1"  onclick="toggleZonaCard(); mostrarCentros('ZONA-1');">
+                    Nombre Zona: <span>ZONA-A</span>
+                  </button>
+                  <button class="btn btn-danger" id="zona-2"  onclick="toggleZonaCard(); mostrarCentros('ZONA-2');">
+                    Nombre Zona: <span>ZONA-B</span>
+                  </button>
+                  <button class="btn btn-danger" id="zona-3"  onclick="toggleZonaCard(); mostrarCentros('ZONA-3');">
+                    Nombre Zona: <span>ZONA-C</span>
+                  </button>
+                </div>
+              </div>
+              <div class="row">
+                <div class="card mb-4 mt-3" style="width: 500px; height: 400px">
+                  <div class="card-header">Centros</div>
+                  <div class="card-body" id="centros">
+                  </div>
+                </div>
+                <div class="col">
+                  <div id="map-personal2" style="width: 600px; height: 400px"></div>
+                </div>
+              </div>
+              <div class="card mb-4">
+                <div class="card-header">Pacientes sin realizar encuestas</div>
+                <div class="card-body">
+                  <p id="estadoEncuesta">
+                    Nombre: <strong id="paciente-1">Gonzalo Petosa</strong>
+                  </p>
+                  <p id="estadoEncuesta">
+                    Nombre: <strong id="paciente-2">Alejandra Heredia</strong>
+                  </p>
+                  <p id="estadoEncuesta">
+                    Nombre: <strong id="paciente-3">Matias Castillo</strong>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <a href="reportes.html" class="btn btn-primary">Ver Reportes</a>
+          <button class="btn btn-secondary mt-2" onclick="actualizarPadron()">
+            Actualizar Padrón
+          </button>
+        </div>
+      
+      <!-- Botón de cierre de sesión -->
+      <div class="text-center mt-5">
+        <button id="logoutButton" class="btn btn-danger">Cerrar Sesión</button>
+      </div>
+      </div>
     </div>
 
-    <!-- Contenido específico según el rol -->
-    <div id="contenidoRol" class="mt-4"></div>
-
-    <!-- Botón de cierre de sesión -->
-    <div class="text-center mt-5">
-      <button id="logoutButton" class="btn btn-danger">Cerrar Sesión</button>
-    </div>
-  </div>
-
-  <script src="personal.js"></script>
-
-  <!-- Bootstrap JS, Popper.js, y jQuery -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    
+    <!-- Bootstrap JS, Popper.js, y jQuery -->
+    
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="personal.js"></script>
+    
+  </body>
 </html>
